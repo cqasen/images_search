@@ -81,7 +81,7 @@
                 var imgObj = document.getElementById("preview");
             }
         })
-		
+
 		$("#imgsrc").change(function () {
 		    var $file = $(this);
 		    var fileObj = $file[0];
@@ -99,7 +99,7 @@
 		    //     var imgObj = document.getElementById("preview");
 		    // }
 		})
-		
+
         $("#search_btn").click(function () {
             // var formData = new FormData();
             // // console.info($("#file_upload")[0].files[0])
@@ -108,7 +108,7 @@
 			var imgsrc = $("#imgsrc").val()
 			console.info(imgsrc)
             $.ajax({
-                url: 'http://127.0.0.1:8080/search?url='+imgsrc,
+                url: 'http://111.229.103.26:8080/search?url='+imgsrc,
                 type: "GET",
                 dataType: 'json',
                 cache: false,
