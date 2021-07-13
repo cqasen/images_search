@@ -44,7 +44,7 @@
         <h1 class="display-5">以图搜商品</h1>
         <div class="input-group mb-3">
             <!-- <input type="file" id="file_upload" name="image" class="form-control"> -->
-			<input type="text" id="imgsrc" value="" class="form-control" placeholder="请输入图片的网络地址" />
+            <input type="text" id="imgsrc" value="" class="form-control" placeholder="请输入图片的网络地址"/>
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="button" id="search_btn">搜索</button>
             </div>
@@ -82,38 +82,39 @@
             }
         })
 
-		$("#imgsrc").change(function () {
-		    var $file = $(this);
-		    var fileObj = $file[0];
-		    var windowURL = window.URL || window.webkitURL;
-		    var dataURL;
-		    var $img = $("#preview");
-			var dataURL = $file.val();
-			console.info(dataURL)
-			$img.attr('src', dataURL);
-		    // if (fileObj && fileObj.files && fileObj.files[0]) {
-		    //     dataURL = windowURL.createObjectURL(fileObj.files[0]);
-		    //     $img.attr('src', dataURL);
-		    // } else {
-		    //     dataURL = $file.val();
-		    //     var imgObj = document.getElementById("preview");
-		    // }
-		})
+        $("#imgsrc").change(function () {
+            var $file = $(this);
+            var fileObj = $file[0];
+            var windowURL = window.URL || window.webkitURL;
+            var dataURL;
+            var $img = $("#preview");
+            var dataURL = $file.val();
+            console.info(dataURL)
+            $img.attr('src', dataURL);
+            // if (fileObj && fileObj.files && fileObj.files[0]) {
+            //     dataURL = windowURL.createObjectURL(fileObj.files[0]);
+            //     $img.attr('src', dataURL);
+            // } else {
+            //     dataURL = $file.val();
+            //     var imgObj = document.getElementById("preview");
+            // }
+        })
 
         $("#search_btn").click(function () {
             // var formData = new FormData();
             // // console.info($("#file_upload")[0].files[0])
             // formData.append("image", $("#file_upload")[0].files[0]);
             // console.log(formData.get('image'));
-			var imgsrc = $("#imgsrc").val()
-			console.info(imgsrc)
+            var imgsrc = $("#imgsrc").val()
+            console.info(imgsrc)
             $.ajax({
-                url: 'http://111.229.103.26:8080/search?url='+imgsrc,
+                url: 'http://111.229.103.26:8080/search?url=' + imgsrc,
                 type: "GET",
                 dataType: 'json',
                 cache: false,
                 contentType: false,
                 processData: false,
+                crossDomain: true,
                 success: function (data) {
                     // console.log(data);
                     console.log(data.result);
@@ -124,8 +125,8 @@
                         html += '<figure class="figure col-lg-3">\n' +
                             '<img data-original=' + product[i]['url'] + ' data-score=' + product[i]['_score'] + ' class="figure-img img-fluid rounded lazy" >\n' +
                             '<figcaption class="figure-caption text-left">相似度 ' + product[i]['_score'] + '</figcaption>' +
-							'<figcaption class="figure-caption text-left">' + product[i]['name'] + '</figcaption>' +
-							'</figure>';
+                            '<figcaption class="figure-caption text-left">' + product[i]['name'] + '</figcaption>' +
+                            '</figure>';
                     }
                     $("#myresult").html(html);
                     $("#res_num").find("em").html(num);
