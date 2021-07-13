@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>以图搜图</title>
+    <link rel="stylesheet" href="./bootstrap.min.css">
+
+    <style>
+
+        .jumbotron {
+            padding: 2rem 1rem;
+        }
+
+        .img {
+            height: 130px;
+            border-width: 0px;
+        }
+
+        ul li {
+            list-style: none;
+            padding: 0px;
+            margin: 0px 5px;
+            float: left;
+        }
+
+        .xs {
+            position: absolute;
+            bottom: 0;
+            left: 1em;
+            background-color: black;
+            opacity: 0.5;
+            filter: alpha(opacity=40);
+            color: #f00;
+        }
+
+        #search_btn {
+            border: 1px solid #ced4da;
+        }
+    </style>
+</head>
+<body>
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-5">以图搜商品</h1>
+        <div class="input-group mb-3">
+            <input type="file" id="file_upload" name="image" class="form-control">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" id="search_btn">搜索</button>
+            </div>
+        </div>
+        <div class="container">
+            <img id="preview" class="img"/>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <h3 id="res_num" style="display: none">为你找到了<em>0</em>条相似度在65%及以上的记录</h3>
+    <div class="row" id="myresult">
+
+    </div>
+</div>
+
+
+</body>
+<script src="./jquery-2.1.1.min.js"></script>
+<script src="./jquery.lazyload.min.js"></script>
+<script type="application/javascript">
+    $(document).ready(function () {
+        $("#file_upload").change(function () {
+            var $file = $(this);
+            var fileObj = $file[0];
+            var windowURL = window.URL || window.webkitURL;
+            var dataURL;
+            var $img = $("#preview");
+            if (fileObj && fileObj.files && fileObj.files[0]) {
+                dataURL = windowURL.createObjectURL(fileObj.files[0]);
+                $img.attr('src', dataURL);
+            } else {
+                dataURL = $file.val();
+                var imgObj = document.getElementById("preview");
+            }
+        })
+        $("#search_btn").click(function () {
+            var formData = new FormData();
+            // console.info($("#file_upload")[0].files[0])
+            formData.append("image", $("#file_upload")[0].files[0]);
+            // console.log(formData.get('image'));
+
+            $.ajax({
+                url: 'http://127.0.0.1:8080/search',
+                data: formData,
+                type: "post",
+                dataType: 'json',
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    // console.log(data);
+                    console.log(data.data);
+                    html = "";
+                    product = data.data.list;
+                    num = data.data.num;
+                    for (i = 0; i < product.length; i++) {
+                        html += '<figure class="figure col-lg-3">\n' +
+                            '<img data-original=' + product[i]['url'] + ' data-score=' + product[i]['_score'] + ' class="figure-img img-fluid rounded lazy" >\n' +
+                            '<figcaption class="figure-caption text-left">相似度 ' + product[i]['_score'] + '%</figcaption>' +
+                            '        </figure>';
+                    }
+                    $("#myresult").html(html);
+                    $("#res_num").find("em").html(num);
+                    $("#res_num").css("display", "block");
+                    $("img.lazy").lazyload({effect: "fadeIn"});
+                },
+                error: function () {
+                    console.log("获取失败");
+                }
+            })
+        })
+        $(function () {
+            $("img.lazy").lazyload({effect: "fadeIn"});
+        });
+    })
+</script>
+</html>
